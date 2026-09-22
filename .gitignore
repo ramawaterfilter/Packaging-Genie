@@ -1,0 +1,8 @@
+.claude/
+node_modules/
+_site/
+release/
+*.zip
+*.log
+.DS_Store
+Thumbs.db
