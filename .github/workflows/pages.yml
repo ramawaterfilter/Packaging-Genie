@@ -37,10 +37,10 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - name: Prepare site (only the application file is published)
+      - name: Prepare site (only the application files are published)
         run: |
           mkdir _site
-          cp index.html _site/
+          cp index.html styles.css engine.js app.js _site/
           touch _site/.nojekyll
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
