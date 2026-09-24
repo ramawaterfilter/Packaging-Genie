@@ -1,493 +1,239 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Packaging Genie</title>
-    <script>
-      /* Apply the saved light/dark choice before first paint (default: follow the system setting). */
-      (function () {
-        try {
-          var t = localStorage.getItem("pmo.theme");
-          if (t === "light" || t === "dark")
-            document.documentElement.setAttribute("data-theme", t);
-        } catch (e) {
-          /* ignore */
-        }
-      })();
-    </script>
-    <meta
-      name="description"
-      content="Packaging Genie by RAMA – pallet and container capacity and SKU mix optimisation with physical loading plans, 3D view and load-safety checks."
-    />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <noscript
-      ><div
-        style="
-          padding: 16px;
-          background: #fdecea;
-          color: #b3261e;
-          font-weight: 600;
-        "
-      >
-        Packaging Genie needs JavaScript. Please enable JavaScript in your
-        browser.
-      </div></noscript
-    >
-    <header class="app-header">
-      <div class="brand">
-        <img
-          class="brand-logo"
-          src="data:image/png;base64,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"
-          alt="RAMA"
-        />
-        <div>
-          <h1>PACKAGING GENIE</h1>
-          <div class="sub">
-            Pallet &amp; container capacity · target-mix optimiser · 3D loading
-            plans · load-safety checks · v1.2
-          </div>
-        </div>
-      </div>
-      <div class="header-actions">
-        <button
-          class="btn ghost theme-toggle"
-          data-action="theme-toggle"
-          id="theme-toggle"
-          aria-label="Switch between light and dark mode"
-        >
-          🌙 Dark mode
-        </button>
-        <button
-          class="btn ghost"
-          data-action="export-data"
-          title="Download products, pallets, containers and saved plans as a JSON file to share with the team"
-        >
-          Export data (JSON)
-        </button>
-        <label
-          class="btn ghost"
-          title="Load a JSON data file exported from this application"
-          >Import data<input
-            type="file"
-            id="import-file"
-            accept=".json,application/json"
-            hidden
-        /></label>
-      </div>
-    </header>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Packaging Genie</title>
+<script>
+/* Apply the saved light/dark choice before first paint (default: follow the system setting). */
+(function () { try { var t = localStorage.getItem('pmo.theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch (e) { /* ignore */ } })();
+</script>
+<meta name="description" content="Packaging Genie by RAMA – pallet and container capacity and SKU mix optimisation with physical loading plans, 3D view and load-safety checks.">
 
-    <nav class="tabs" id="tabs" aria-label="Application sections">
-      <button data-tab="single">Single SKU</button>
-      <button data-tab="mix" class="active">Target Mix</button>
-      <button data-tab="exact">Exact Quantity</button>
-      <button data-tab="multi">Multi-Pallet</button>
-      <button data-tab="contpal">Pallets → Container</button>
-      <button data-tab="products">Product Master</button>
-      <button data-tab="pallets">Pallet Master</button>
-      <button data-tab="containers">Container Master</button>
-      <button data-tab="plans">Saved Plans</button>
-      <button data-tab="tests">Self-Test &amp; Method</button>
-    </nav>
+<link rel="stylesheet" href="styles.css">
 
-    <main>
-      <!-- ============ SINGLE SKU ============ -->
-      <section class="tab" id="tab-single">
-        <div class="layout-2">
-          <aside class="panel">
-            <h2>Single SKU capacity</h2>
-            <div id="single-settings"></div>
-            <div class="field">
-              <label for="single-sku">SKU</label
-              ><select id="single-sku"></select>
-            </div>
-            <button class="btn primary big block" data-action="run-single">
-              CALCULATE CAPACITY
-            </button>
-          </aside>
-          <div id="single-results">
-            <div class="empty">
-              Select a pallet or container and a SKU, then click
-              <b>Calculate capacity</b>.
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ============ TARGET MIX ============ -->
-      <section class="tab active" id="tab-mix">
-        <div class="layout-3">
-          <aside class="panel">
-            <h2>Load unit &amp; rules</h2>
-            <div id="mix-settings"></div>
-            <div class="field">
-              <label for="mix-basis">Distribution basis</label>
-              <select id="mix-basis">
-                <option value="cartons" selected>Carton Quantity</option>
-                <option value="units">Saleable Unit Quantity</option>
-                <option value="weight">Product Weight</option>
-              </select>
-              <div class="hint">
-                The meaning of Target %. It never means % of pallet volume.
-              </div>
-            </div>
-            <div class="field">
-              <label for="mix-tol"
-                >Allowed mix tolerance (± percentage points)</label
-              >
-              <div class="inline">
-                <select id="mix-tol">
-                  <option value="0">0</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="5" selected>5</option>
-                  <option value="10">10</option>
-                  <option value="custom">Custom</option>
-                </select>
-                <input
-                  id="mix-tol-custom"
-                  type="number"
-                  min="0"
-                  max="100"
-                  step="0.1"
-                  placeholder="pp"
-                  hidden
-                />
-              </div>
-            </div>
-            <div class="field">
-              <label for="mix-mode">Optimisation priority</label>
-              <select id="mix-mode">
-                <option value="match">A. Best match to target mix</option>
-                <option value="balanced" selected>B. Balanced</option>
-                <option value="util">C. Maximum pallet utilisation</option>
-              </select>
-            </div>
-          </aside>
-          <section class="panel">
-            <div class="panel-head">
-              <h2>SKU mix — target distribution</h2>
-              <div class="field" style="margin: 0; min-width: 240px">
-                <input
-                  type="text"
-                  id="mix-name"
-                  placeholder="Plan name, e.g. France B2B September Mix"
-                />
-              </div>
-            </div>
-            <div class="table-wrap">
-              <table class="mix-table" id="mix-table">
-                <thead>
-                  <tr>
-                    <th>Include</th>
-                    <th>SKU</th>
-                    <th>Target %</th>
-                    <th>Priority</th>
-                    <th>Min cartons</th>
-                    <th>Max cartons</th>
-                    <th>Lock qty</th>
-                    <th>Locked cartons</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
-            </div>
-            <div class="total-bar" id="mix-total"></div>
-            <div class="btn-row">
-              <button class="btn" data-action="mix-add">+ Add SKU</button>
-              <span class="inline"
-                ><button class="btn" data-action="mix-add-all">
-                  + Add all active SKUs of</button
-                ><select id="mix-brand" aria-label="Brand to add"></select
-              ></span>
-              <button class="btn" data-action="mix-normalise">
-                NORMALISE TO 100%
-              </button>
-              <button class="btn danger" data-action="mix-clear">
-                Clear table
-              </button>
-            </div>
-            <div id="mix-validation"></div>
-            <div style="margin-top: 12px">
-              <button class="btn primary big block" data-action="run-mix">
-                OPTIMISE PALLET
-              </button>
-            </div>
-            <p class="hint">
-              Min / max / locked quantities are optional. A locked SKU keeps
-              exactly its locked carton quantity; the target % of the other SKUs
-              then applies to the remaining (optimised) part of the load.
-            </p>
-          </section>
-          <aside class="panel summary-col" id="mix-summary">
-            <h2>Optimised summary</h2>
-            <div class="empty">Run the optimiser to see the result.</div>
-          </aside>
-        </div>
-        <div id="mix-results"></div>
-      </section>
-
-      <!-- ============ EXACT QUANTITY ============ -->
-      <section class="tab" id="tab-exact">
-        <div class="layout-2">
-          <aside class="panel">
-            <h2>Exact required quantity</h2>
-            <div id="exact-settings"></div>
-            <div class="field">
-              <label for="exact-basis">Quantity input basis</label>
-              <select id="exact-basis">
-                <option value="cartons">Cartons</option>
-                <option value="units">Saleable units</option>
-              </select>
-              <div class="hint">
-                Saleable units are converted with CEILING(units ÷ units per
-                carton).
-              </div>
-            </div>
-          </aside>
-          <section class="panel">
-            <h2>Required quantities</h2>
-            <div class="table-wrap">
-              <table id="exact-table">
-                <thead>
-                  <tr>
-                    <th>SKU</th>
-                    <th>Quantity</th>
-                    <th>Units / carton</th>
-                    <th>Required cartons</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
-            </div>
-            <div class="btn-row" style="margin-top: 10px">
-              <button class="btn" data-action="exact-add">+ Add SKU</button>
-              <button class="btn danger" data-action="exact-clear">
-                Clear table
-              </button>
-            </div>
-            <div id="exact-validation"></div>
-            <div style="margin-top: 12px">
-              <button class="btn primary big block" data-action="run-exact">
-                CHECK FIT &amp; PLAN
-              </button>
-            </div>
-          </section>
-        </div>
-        <div id="exact-results"></div>
-      </section>
-
-      <!-- ============ MULTI PALLET ============ -->
-      <section class="tab" id="tab-multi">
-        <div class="layout-2">
-          <aside class="panel">
-            <h2>Multi-unit allocation</h2>
-            <div id="multi-settings"></div>
-            <div class="field">
-              <label for="multi-basis">Quantity input basis</label>
-              <select id="multi-basis">
-                <option value="cartons">Cartons</option>
-                <option value="units">Saleable units</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="multi-strategy">Mix rule</label>
-              <select id="multi-strategy">
-                <option value="shipment">
-                  Apply mix across complete shipment (minimise pallet count)
-                </option>
-                <option value="perUnit">
-                  Apply mix to each pallet (every pallet carries the same
-                  proportions)
-                </option>
-              </select>
-            </div>
-          </aside>
-          <section class="panel">
-            <h2>Shipment quantities</h2>
-            <div class="table-wrap">
-              <table id="multi-table">
-                <thead>
-                  <tr>
-                    <th>SKU</th>
-                    <th>Quantity</th>
-                    <th>Units / carton</th>
-                    <th>Required cartons</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
-            </div>
-            <div class="btn-row" style="margin-top: 10px">
-              <button class="btn" data-action="multi-add">+ Add SKU</button>
-              <button class="btn danger" data-action="multi-clear">
-                Clear table
-              </button>
-            </div>
-            <div id="multi-validation"></div>
-            <div style="margin-top: 12px">
-              <button class="btn primary big block" data-action="run-multi">
-                ALLOCATE TO PALLETS
-              </button>
-            </div>
-          </section>
-        </div>
-        <div id="multi-results"></div>
-      </section>
-
-      <!-- ============ PALLETS INTO CONTAINER ============ -->
-      <section class="tab" id="tab-contpal">
-        <div class="layout-2">
-          <aside class="panel">
-            <h2>Loaded pallets → container</h2>
-            <div class="field">
-              <label for="cp-container">Container</label
-              ><select id="cp-container"></select>
-              <div class="hint" id="cp-container-info"></div>
-            </div>
-            <div class="field">
-              <label for="cp-pallet">Pallet type</label
-              ><select id="cp-pallet"></select>
-            </div>
-            <div class="row2">
-              <div class="field">
-                <label for="cp-qty">Pallets to ship</label
-                ><input id="cp-qty" type="number" min="0" step="1" value="20" />
-              </div>
-              <div class="field">
-                <label for="cp-tiers">Pallet stacking</label
-                ><select id="cp-tiers">
-                  <option value="1">Not stackable</option>
-                  <option value="2">Up to 2 high</option>
-                  <option value="3">Up to 3 high</option>
-                </select>
-              </div>
-            </div>
-            <div class="row2">
-              <div class="field">
-                <label for="cp-height"
-                  >Loaded pallet height (mm, incl. base)</label
-                ><input
-                  id="cp-height"
-                  type="number"
-                  min="1"
-                  step="1"
-                  value="1650"
-                />
-              </div>
-              <div class="field">
-                <label for="cp-gross">Gross weight per pallet (kg)</label
-                ><input
-                  id="cp-gross"
-                  type="number"
-                  min="0"
-                  step="0.1"
-                  value="600"
-                />
-              </div>
-            </div>
-            <div class="field">
-              <label for="cp-clear">Clearance between pallets (mm)</label
-              ><input id="cp-clear" type="number" min="0" step="1" value="0" />
-            </div>
-            <div class="btn-row" style="margin-bottom: 10px">
-              <button class="btn small" data-action="cp-use-last">
-                Use last calculated pallet
-              </button>
-            </div>
-            <div class="hint" id="cp-last-info"></div>
-            <button
-              class="btn primary big block"
-              data-action="run-contpal"
-              style="margin-top: 10px"
-            >
-              CALCULATE CONTAINER LOAD
-            </button>
-          </aside>
-          <div id="contpal-results">
-            <div class="empty">
-              Enter the loaded pallet data (or use the last pallet calculated in
-              another tab) and click
-              <b>Calculate container load</b>.<br /><br />For loose cartons
-              loaded directly into a container, pick a container as the load
-              unit in the Single SKU, Target Mix, Exact Quantity or Multi-Pallet
-              tabs.
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ============ MASTERS ============ -->
-      <section class="tab" id="tab-products">
-        <div class="panel" id="products-master"></div>
-      </section>
-      <section class="tab" id="tab-pallets">
-        <div class="panel" id="pallets-master"></div>
-      </section>
-      <section class="tab" id="tab-containers">
-        <div class="panel" id="containers-master"></div>
-      </section>
-
-      <!-- ============ SAVED PLANS ============ -->
-      <section class="tab" id="tab-plans">
-        <div class="panel" id="plans-list"></div>
-      </section>
-
-      <!-- ============ TESTS & METHOD ============ -->
-      <section class="tab" id="tab-tests">
-        <div class="panel">
-          <div class="panel-head">
-            <h2>Built-in self-test</h2>
-            <button class="btn primary" data-action="run-tests">
-              RUN SELF-TESTS
-            </button>
-          </div>
-          <p class="muted">
-            Runs the default SKUs individually on the Europe and Industrial
-            pallets, the mixed-pallet tests A–D (plus extra exact-quantity,
-            multi-pallet and container checks). Every scenario is checked for
-            footprint, overlap, height, weight, orientation, support, carton
-            counts and recalculated percentages. The tests always use the
-            built-in default data, not your edited master data.
-          </p>
-          <div id="tests-results"></div>
-        </div>
-        <div class="panel" id="assess-panel"></div>
-        <div class="panel" id="method-panel"></div>
-      </section>
-    </main>
-
-    <div id="overlay" hidden>
-      <div class="overlay-box" role="alertdialog" aria-live="polite">
-        <div class="spinner"></div>
-        <div id="overlay-title" style="font-weight: 700">
-          Optimising pallet mix…
-        </div>
-        <div
-          id="overlay-progress"
-          class="muted small"
-          style="margin: 6px 0 14px"
-        >
-          Candidates evaluated: 0
-        </div>
-        <button class="btn" data-action="cancel-run">Cancel calculation</button>
-      </div>
+</head>
+<body>
+<noscript><div style="padding:16px;background:#fdecea;color:#b3261e;font-weight:600">Packaging Genie needs JavaScript. Please enable JavaScript in your browser.</div></noscript>
+<header class="app-header">
+  <div class="brand">
+    <img class="brand-logo" src="data:image/png;base64,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" alt="RAMA">
+    <div>
+      <h1>PACKAGING GENIE</h1>
+      <div class="sub">Pallet &amp; container capacity · target-mix optimiser · 3D loading plans · load-safety checks · v1.3</div>
     </div>
-    <div id="toast" role="status"></div>
-    <div id="print-report"></div>
+  </div>
+  <div class="header-actions">
+    <button class="btn ghost theme-toggle" data-action="theme-toggle" id="theme-toggle" aria-label="Switch between light and dark mode">🌙 Dark mode</button>
+    <button class="btn ghost" data-action="export-data" title="Download products, pallets, containers and saved plans as a JSON file to share with the team">Export data (JSON)</button>
+    <label class="btn ghost" title="Load a JSON data file exported from this application">Import data<input type="file" id="import-file" accept=".json,application/json" hidden></label>
+  </div>
+</header>
 
-    <!-- =====================================================================
+<nav class="tabs" id="tabs" aria-label="Application sections">
+  <button data-tab="single">Single SKU</button>
+  <button data-tab="mix" class="active">Target Mix</button>
+  <button data-tab="exact">Exact Quantity</button>
+  <button data-tab="multi">Multi-Pallet</button>
+  <button data-tab="contpal">Pallets → Container</button>
+  <button data-tab="products">Product Master</button>
+  <button data-tab="pallets">Pallet Master</button>
+  <button data-tab="containers">Container Master</button>
+  <button data-tab="plans">Saved Plans</button>
+  <button data-tab="tests">Self-Test &amp; Method</button>
+</nav>
+
+<main>
+  <!-- ============ SINGLE SKU ============ -->
+  <section class="tab" id="tab-single">
+    <div class="layout-2">
+      <aside class="panel">
+        <h2>Single SKU capacity</h2>
+        <div id="single-settings"></div>
+        <div class="field"><label for="single-sku">SKU</label><select id="single-sku"></select></div>
+        <button class="btn primary big block" data-action="run-single">CALCULATE CAPACITY</button>
+      </aside>
+      <div id="single-results"><div class="empty">Select a pallet or container and a SKU, then click <b>Calculate capacity</b>.</div></div>
+    </div>
+  </section>
+
+  <!-- ============ TARGET MIX ============ -->
+  <section class="tab active" id="tab-mix">
+    <div class="layout-3">
+      <aside class="panel">
+        <h2>Load unit &amp; rules</h2>
+        <div id="mix-settings"></div>
+        <div class="field"><label for="mix-basis">Distribution basis</label>
+          <select id="mix-basis">
+            <option value="cartons" selected>Carton Quantity</option>
+            <option value="units">Saleable Unit Quantity</option>
+            <option value="weight">Product Weight</option>
+          </select>
+          <div class="hint">The meaning of Target %. It never means % of pallet volume.</div>
+        </div>
+        <div class="field"><label for="mix-tol">Allowed mix tolerance (± percentage points)</label>
+          <div class="inline">
+            <select id="mix-tol"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="5" selected>5</option><option value="10">10</option><option value="custom">Custom</option></select>
+            <input id="mix-tol-custom" type="number" min="0" max="100" step="0.1" placeholder="pp" hidden>
+          </div>
+        </div>
+        <div class="field"><label for="mix-mode">Optimisation priority</label>
+          <select id="mix-mode">
+            <option value="match">A. Best match to target mix</option>
+            <option value="balanced" selected>B. Balanced</option>
+            <option value="util">C. Maximum pallet utilisation</option>
+          </select>
+        </div>
+      </aside>
+      <section class="panel">
+        <div class="panel-head"><h2>SKU mix — target distribution</h2>
+          <div class="field" style="margin:0;min-width:240px"><input type="text" id="mix-name" placeholder="Plan name, e.g. France B2B September Mix"></div>
+        </div>
+        <div class="table-wrap">
+          <table class="mix-table" id="mix-table">
+            <thead><tr><th>Include</th><th>SKU</th><th>Target %</th><th>Priority</th><th>Min cartons</th><th>Max cartons</th><th>Lock qty</th><th>Locked cartons</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="total-bar" id="mix-total"></div>
+        <div class="btn-row">
+          <button class="btn" data-action="mix-add">+ Add SKU</button>
+          <span class="inline"><button class="btn" data-action="mix-add-all">+ Add all active SKUs of</button><select id="mix-brand" aria-label="Brand to add"></select></span>
+          <button class="btn" data-action="mix-normalise">NORMALISE TO 100%</button>
+          <button class="btn danger" data-action="mix-clear">Clear table</button>
+        </div>
+        <div id="mix-validation"></div>
+        <div style="margin-top:12px"><button class="btn primary big block" data-action="run-mix">OPTIMISE PALLET</button></div>
+        <p class="hint">Min / max / locked quantities are optional. A locked SKU keeps exactly its locked carton quantity; the target % of the other SKUs then applies to the remaining (optimised) part of the load.</p>
+      </section>
+      <aside class="panel summary-col" id="mix-summary">
+        <h2>Optimised summary</h2>
+        <div class="empty">Run the optimiser to see the result.</div>
+      </aside>
+    </div>
+    <div id="mix-results"></div>
+  </section>
+
+  <!-- ============ EXACT QUANTITY ============ -->
+  <section class="tab" id="tab-exact">
+    <div class="layout-2">
+      <aside class="panel">
+        <h2>Exact required quantity</h2>
+        <div id="exact-settings"></div>
+        <div class="field"><label for="exact-basis">Quantity input basis</label>
+          <select id="exact-basis"><option value="cartons">Cartons</option><option value="units">Saleable units</option></select>
+          <div class="hint">Saleable units are converted with CEILING(units ÷ units per carton).</div>
+        </div>
+      </aside>
+      <section class="panel">
+        <h2>Required quantities</h2>
+        <div class="table-wrap"><table id="exact-table"><thead><tr><th>SKU</th><th>Quantity</th><th>Units / carton</th><th>Required cartons</th><th></th></tr></thead><tbody></tbody></table></div>
+        <div class="btn-row" style="margin-top:10px">
+          <button class="btn" data-action="exact-add">+ Add SKU</button>
+          <button class="btn danger" data-action="exact-clear">Clear table</button>
+        </div>
+        <div id="exact-validation"></div>
+        <div style="margin-top:12px"><button class="btn primary big block" data-action="run-exact">CHECK FIT &amp; PLAN</button></div>
+      </section>
+    </div>
+    <div id="exact-results"></div>
+  </section>
+
+  <!-- ============ MULTI PALLET ============ -->
+  <section class="tab" id="tab-multi">
+    <div class="layout-2">
+      <aside class="panel">
+        <h2>Multi-unit allocation</h2>
+        <div id="multi-settings"></div>
+        <div class="field"><label for="multi-basis">Quantity input basis</label>
+          <select id="multi-basis"><option value="cartons">Cartons</option><option value="units">Saleable units</option></select>
+        </div>
+        <div class="field"><label for="multi-strategy">Mix rule</label>
+          <select id="multi-strategy">
+            <option value="shipment">Apply mix across complete shipment (minimise pallet count)</option>
+            <option value="perUnit">Apply mix to each pallet (every pallet carries the same proportions)</option>
+          </select>
+        </div>
+      </aside>
+      <section class="panel">
+        <h2>Shipment quantities</h2>
+        <div class="table-wrap"><table id="multi-table"><thead><tr><th>SKU</th><th>Quantity</th><th>Units / carton</th><th>Required cartons</th><th></th></tr></thead><tbody></tbody></table></div>
+        <div class="btn-row" style="margin-top:10px">
+          <button class="btn" data-action="multi-add">+ Add SKU</button>
+          <button class="btn danger" data-action="multi-clear">Clear table</button>
+        </div>
+        <div id="multi-validation"></div>
+        <div style="margin-top:12px"><button class="btn primary big block" data-action="run-multi">ALLOCATE TO PALLETS</button></div>
+      </section>
+    </div>
+    <div id="multi-results"></div>
+  </section>
+
+  <!-- ============ PALLETS INTO CONTAINER ============ -->
+  <section class="tab" id="tab-contpal">
+    <div class="layout-2">
+      <aside class="panel">
+        <h2>Loaded pallets → container</h2>
+        <div class="field"><label for="cp-container">Container</label><select id="cp-container"></select><div class="hint" id="cp-container-info"></div></div>
+        <div class="field"><label for="cp-pallet">Pallet type</label><select id="cp-pallet"></select></div>
+        <div class="row2">
+          <div class="field"><label for="cp-qty">Pallets to ship</label><input id="cp-qty" type="number" min="0" step="1" value="20"></div>
+          <div class="field"><label for="cp-tiers">Pallet stacking</label><select id="cp-tiers"><option value="1">Not stackable</option><option value="2">Up to 2 high</option><option value="3">Up to 3 high</option></select></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label for="cp-height">Loaded pallet height (mm, incl. base)</label><input id="cp-height" type="number" min="1" step="1" value="1650"></div>
+          <div class="field"><label for="cp-gross">Gross weight per pallet (kg)</label><input id="cp-gross" type="number" min="0" step="0.1" value="600"></div>
+        </div>
+        <div class="field"><label for="cp-clear">Clearance between pallets (mm)</label><input id="cp-clear" type="number" min="0" step="1" value="25"></div>
+        <div class="btn-row" style="margin-bottom:10px"><button class="btn small" data-action="cp-use-last">Use last calculated pallet</button></div>
+        <div class="hint" id="cp-last-info"></div>
+        <button class="btn primary big block" data-action="run-contpal" style="margin-top:10px">CALCULATE CONTAINER LOAD</button>
+      </aside>
+      <div id="contpal-results"><div class="empty">Enter the loaded pallet data (or use the last pallet calculated in another tab) and click <b>Calculate container load</b>.<br><br>For loose cartons loaded directly into a container, pick a container as the load unit in the Single SKU, Target Mix, Exact Quantity or Multi-Pallet tabs.</div></div>
+    </div>
+  </section>
+
+  <!-- ============ MASTERS ============ -->
+  <section class="tab" id="tab-products"><div class="panel" id="products-master"></div></section>
+  <section class="tab" id="tab-pallets"><div class="panel" id="pallets-master"></div></section>
+  <section class="tab" id="tab-containers"><div class="panel" id="containers-master"></div></section>
+
+  <!-- ============ SAVED PLANS ============ -->
+  <section class="tab" id="tab-plans"><div class="panel" id="plans-list"></div></section>
+
+  <!-- ============ TESTS & METHOD ============ -->
+  <section class="tab" id="tab-tests">
+    <div class="panel">
+      <div class="panel-head"><h2>Built-in self-test</h2><button class="btn primary" data-action="run-tests">RUN SELF-TESTS</button></div>
+      <p class="muted">Runs the default SKUs individually on the Europe and Industrial pallets, the mixed-pallet tests A–D (plus extra exact-quantity, multi-pallet and container checks). Every scenario is checked for footprint, overlap, height, weight, orientation, support, carton counts and recalculated percentages. The tests always use the built-in default data, not your edited master data.</p>
+      <div id="tests-results"></div>
+    </div>
+    <div class="panel" id="assess-panel"></div>
+    <div class="panel" id="method-panel"></div>
+  </section>
+</main>
+
+<div id="overlay" hidden>
+  <div class="overlay-box" role="alertdialog" aria-live="polite">
+    <div class="spinner"></div>
+    <div id="overlay-title" style="font-weight:700">Optimising pallet mix…</div>
+    <div id="overlay-progress" class="muted small" style="margin:6px 0 14px">Candidates evaluated: 0</div>
+    <button class="btn" data-action="cancel-run">Cancel calculation</button>
+  </div>
+</div>
+<div id="toast" role="status"></div>
+<div id="print-report"></div>
+
+<!-- =====================================================================
      ENGINE (pure calculation code – runs in a Web Worker and on the page)
      Modules: Product data · Pallet data · Packing engine · Mix optimisation
      engine · Scenario ranking · Validation · Self-tests
      ===================================================================== -->
-    <script id="engine-src" src="engine.js"></script>
-    <script src="app.js"></script>
-  </body>
+<script id="engine-src" src="engine.js"></script>
+
+<!-- =====================================================================
+     USER INTERFACE · Storage · Visualisation · Export
+     ===================================================================== -->
+<script src="app.js"></script>
+</body>
 </html>
